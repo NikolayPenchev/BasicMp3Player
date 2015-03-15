@@ -1,0 +1,384 @@
+package Mp3Player;
+
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Font;
+import java.awt.GridBagLayout;
+import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import javax.swing.GroupLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+public class VnEplayer extends JFrame {
+
+	private static final long serialVersionUID = 1L;
+	private VnEplayerDemo demo;
+	public Audio audio;
+	private JLabel background;
+	private JLabel loop;
+	private JLabel loopCounter;
+	private JLabel stop;
+	private JLabel play;
+	private JLabel openSource;
+	private JLabel exit;
+	private JLabel minimize;
+	private JLabel designBy;
+	private JSlider volume;
+	private JLabel volumeLabel;
+	public static JLabel display;
+	public static JList<String> displayPlayList;
+	private JLabel changeTheme;
+	private int width = (Toolkit.getDefaultToolkit().getScreenSize().width / 2) - 144;
+	// private int height = (Toolkit.getDefaultToolkit().getScreenSize().height
+	// /2)-65;
+	public static ArrayList<File> playlist;
+	static int value;
+
+	int xMouse;
+	int yMouse;
+	public static int count;
+	public static int countPausePlay;
+	public static int theme;
+
+	public VnEplayer() {
+		setTitle("Mp3Player");
+		setLayout(new GridBagLayout());
+
+		background = new JLabel(
+				new ImageIcon(
+						"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\Recently Updated-008.jpg"));
+		background.setLayout(new GroupLayout(background));
+		add(background);
+
+		playlist = new ArrayList<File>();
+		audio = new Audio();
+		volumeLabel = new JLabel();
+		// volumeLabel.setText("" + value);
+		volumeLabel.setForeground(new Color(255, 153, 0));
+		volumeLabel.setFont(new Font("Verdana", Font.BOLD, 10));
+		volumeLabel.setBounds(200, 480, 70, 16);
+		volume = new JSlider(0, value, 0);
+		volume.setMajorTickSpacing(1);
+		volume.setAutoscrolls(true);
+		volume.setBounds(95, 480, 100, 16);
+		volume.setBackground(new Color(255, 160, 0));
+		designBy = new JLabel("StereoTape");
+		designBy.setForeground(new Color(255, 153, 0));
+		designBy.setFont(new Font("Segoe Script", Font.BOLD, 15));
+		designBy.setBounds(100, 10, 100, 20);
+		changeTheme = new JLabel(
+				new ImageIcon(
+						"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\pencil.png"));
+		changeTheme.setBounds(3, 3, 31, 31);
+		exit = new JLabel("");
+		exit.setBounds(271, 13, 12, 12);
+		minimize = new JLabel("");
+		minimize.setBounds(255, 13, 17, 17);
+		display = new JLabel("");
+		display.setFont(new Font("Verdana", Font.BOLD, 12));
+		display.setBounds(35, 64, 218, 18);
+		display.setForeground(new Color(255, 153, 0));
+		displayPlayList = new JList<String>();
+		displayPlayList.setForeground(new Color(255, 153, 0));
+		displayPlayList.setBackground(Color.BLACK);
+		displayPlayList.setFont(new Font("Century Gothic", Font.BOLD, 12));
+		displayPlayList.setBounds(3, 496, 282, 140);
+		loop = new JLabel(
+				new ImageIcon(
+						"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\knob_loop_off.png"));
+		loop.setBounds(17, 440, 32, 32);
+		loopCounter = new JLabel("Loop OFF");
+		loopCounter.setBounds(9, 460, 140, 40);
+		loopCounter.setForeground(new Color(255, 153, 0));
+		loopCounter.setFont(new Font("Verdana", Font.BOLD, 10));
+		stop = new JLabel(
+				new ImageIcon(
+						"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\stop.jpg"));
+		stop.setBounds(110, 440, 32, 32);
+		play = new JLabel(
+				new ImageIcon(
+						"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\play.jpg"));
+		play.setBounds(146, 440, 32, 32);
+		openSource = new JLabel(
+				new ImageIcon(
+						"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\eject.jpg"));
+		openSource.setBounds(240, 440, 32, 32);
+
+		background.add(volumeLabel);
+		background.add(volume);
+		background.add(display);
+		background.add(loop);
+		background.add(stop);
+		background.add(play);
+		background.add(openSource);
+		background.add(loopCounter);
+		background.add(exit);
+		background.add(minimize);
+		background.add(changeTheme);
+		background.add(designBy);
+		background.add(displayPlayList);
+
+		demo = new VnEplayerDemo();
+
+		Cursor cursor = new Cursor(12);
+		play.setCursor(cursor);
+		stop.setCursor(cursor);
+		loop.setCursor(cursor);
+		openSource.setCursor(cursor);
+		display.setCursor(cursor);
+		exit.setCursor(cursor);
+		minimize.setCursor(cursor);
+		changeTheme.setCursor(cursor);
+		displayPlayList.setCursor(cursor);
+		volume.setCursor(cursor);
+
+		volume.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+
+				try {
+
+					value = VnEplayerDemo.FIS.available();
+					value /= 39535;
+					// volumeLabel.setText("" + value);
+
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				new Thread() {
+					public void run() {
+
+						for (int i = value; i >= 0; i--) {
+							int a = i / 60;
+							int b = i % 60;
+							volumeLabel.setText(a + ":" + b);
+							repaint();
+							try {
+								Thread.sleep(1000);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					}
+				}.start();
+			}
+		});
+
+		stop.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				demo.Stop();
+				display.setText("");
+				demo.player = null;
+				play.setIcon(new ImageIcon(
+						"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\play.jpg"));
+				countPausePlay = 0;
+				count = 0;
+			}
+		});
+
+		displayPlayList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				demo.Stop();
+				demo.AddPlayList();
+				// for(File f: demo.myFile){
+				// displayPlayList.getModel(). add(f.getName(), new Component())
+				// {
+				// });
+				// }
+			}
+		});
+
+		play.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if (demo.player == null) {
+					demo.Open();
+					play.setIcon(new ImageIcon(
+							"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\pause.jpg"));
+				} else {
+					switch (countPausePlay) {
+					case 0:
+						countPausePlay = 1;
+						play.setIcon(new ImageIcon(
+								"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\play.jpg"));
+						demo.Pause();
+						break;
+					case 1:
+						countPausePlay = 0;
+						play.setIcon(new ImageIcon(
+								"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\pause.jpg"));
+						demo.Resume();
+						break;
+
+					}
+
+				}
+			}
+
+		});
+
+		loop.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				switch (count) {
+				case 0:
+					count = 1;
+					loop.setIcon(new ImageIcon(
+							"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\knob_loop_on.png"));
+					loopCounter.setText("Loop ON");
+					break;
+				case 1:
+					count = 0;
+					loop.setIcon(new ImageIcon(
+							"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\knob_loop_off.png"));
+					loopCounter.setText("Loop OFF");
+
+					break;
+				}
+			}
+		});
+
+		exit.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				System.exit(EXIT_ON_CLOSE);
+			}
+		});
+
+		minimize.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				setState(ICONIFIED);
+			}
+		});
+
+		openSource.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+
+				demo.Open();
+			}
+		});
+
+		changeTheme.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				switch (theme) {
+				case 0:
+					theme = 1;
+					background
+							.setIcon(new ImageIcon(
+									"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\Recently Updated.jpg"));
+					break;
+				case 1:
+					theme = 2;
+					background
+							.setIcon(new ImageIcon(
+									"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\Recently Updated-001.jpg"));
+					break;
+				case 2:
+					theme = 3;
+					background
+							.setIcon(new ImageIcon(
+									"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\Recently Updated-002.jpg"));
+					break;
+				case 3:
+					theme = 4;
+					background
+							.setIcon(new ImageIcon(
+									"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\Recently Updated-003.jpg"));
+					break;
+				case 4:
+					theme = 5;
+					background
+							.setIcon(new ImageIcon(
+									"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\Recently Updated-004.jpg"));
+					break;
+				case 5:
+					theme = 6;
+					background
+							.setIcon(new ImageIcon(
+									"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\Recently Updated-005.jpg"));
+					break;
+				case 6:
+					theme = 7;
+					background
+							.setIcon(new ImageIcon(
+									"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\Recently Updated-006.jpg"));
+					break;
+				case 7:
+					theme = 8;
+					background
+							.setIcon(new ImageIcon(
+									"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\Recently Updated-007.jpg"));
+					break;
+				case 8:
+					theme = 9;
+					background
+							.setIcon(new ImageIcon(
+									"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\Recently Updated-009.jpg"));
+					break;
+				case 9:
+					theme = 10;
+					background
+							.setIcon(new ImageIcon(
+									"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\Recently Updated-010.jpg"));
+					break;
+				case 10:
+					theme = 11;
+					background
+							.setIcon(new ImageIcon(
+									"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\Recently Updated-011.jpg"));
+					break;
+				case 11:
+					theme = 0;
+					background
+							.setIcon(new ImageIcon(
+									"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\Recently Updated-008.jpg"));
+					break;
+				}
+			}
+		});
+
+		setUndecorated(true);
+		pack();
+		setLocation(width, 20);
+
+		background.addMouseMotionListener(new MouseMotionListener() {
+
+			@Override
+			public void mouseMoved(java.awt.event.MouseEvent e) {
+				xMouse = e.getX();
+				yMouse = e.getY();
+
+			}
+
+			@Override
+			public void mouseDragged(java.awt.event.MouseEvent e) {
+				int x = e.getXOnScreen();
+				int y = e.getYOnScreen();
+				setLocation(x - xMouse, y - yMouse);
+			}
+		});
+
+		setVisible(true);
+
+	}
+
+}
