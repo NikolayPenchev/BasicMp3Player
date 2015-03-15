@@ -1,0 +1,154 @@
+package Mp3Player;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javazoom.jl.player.Player;
+
+
+
+public class VnEplayerDemo {
+
+	public Player player;
+	public static FileInputStream FIS;
+	BufferedInputStream BIS;
+	public long pauseLocation;
+	public long songTotallenght;
+	public String fileLocation;
+	public VnEplayer design;
+	public File[] myFile;
+
+	public void Open() {
+		FileNameExtensionFilter filter = new FileNameExtensionFilter(
+				"MP3 Files", "mp3", "mpeg3");
+		JFileChooser chooser = new JFileChooser("D:\\");
+		chooser.addChoosableFileFilter(filter);
+		int returnValue = chooser.showOpenDialog(null);
+		if (returnValue == JFileChooser.APPROVE_OPTION) {
+			File myFile = chooser.getSelectedFile();
+			String song = myFile + "";
+			String name = chooser.getSelectedFile().getName();
+
+			Stop();
+			Play(song);
+			VnEplayer.display.setText(name);
+		}
+
+	}
+
+	public void VolumeCtrl() {
+
+	}
+
+	public void Stop() {
+		if (player != null) {
+
+			player.close();
+			pauseLocation = 0;
+			songTotallenght = 0;
+			fileLocation = "";
+			VnEplayer.display.setText("");
+
+		}
+	}
+
+	public void Pause() {
+		if (player != null) {
+			try {
+				pauseLocation = FIS.available();
+			} catch (Exception e) {
+			}
+			player.close();
+		}
+	}
+
+	public void Resume() {
+		try {
+			FIS = new FileInputStream(fileLocation);
+			BIS = new BufferedInputStream(FIS);
+			player = new Player(BIS);
+			FIS.skip(songTotallenght - pauseLocation);
+
+		} catch (Exception e) {
+		}
+
+		new Thread() {
+			public void run() {
+				try {
+					player.play();
+				} catch (Exception e) {
+
+				}
+			}
+		}.start();
+	}
+
+	public void SongDuration(float duration) {
+
+	}
+
+	public void Play(String path) {
+		try {
+			FIS = new FileInputStream(path);
+			BIS = new BufferedInputStream(FIS);
+			player = new Player(BIS);
+			songTotallenght = FIS.available();
+			fileLocation = path + "";
+
+		} catch (Exception e) {
+		}
+
+		new Thread() {
+			public void run() {
+				try {
+					player.play();
+
+					if (player.isComplete() && VnEplayer.count == 1) {
+						Play(fileLocation);
+					}
+					if (player.isComplete()) {
+						VnEplayer.display.setText("");
+						Stop();
+					}
+
+				} catch (Exception e) {
+
+				}
+			}
+		}.start();
+	}
+
+	public void AddPlayList() {
+		FileNameExtensionFilter filter = new FileNameExtensionFilter(
+				"MP3 Files", "mp3", "mpeg3");
+		JFileChooser chooser = new JFileChooser("D:\\");
+		chooser.addChoosableFileFilter(filter);
+		chooser.setMultiSelectionEnabled(true);
+		int returnValue = chooser.showOpenDialog(null);
+
+		if (returnValue == JFileChooser.APPROVE_OPTION) {
+			this.myFile = chooser.getSelectedFiles();
+
+			for (File f : this.myFile) {
+				VnEplayer.playlist.add(f);
+				System.out.println(VnEplayer.playlist);
+			}
+
+			try {
+				for (int i = 0; i < this.myFile.length; i++) {
+					System.out.println(this.myFile[i].getName());
+				}
+			} catch (Exception e) {
+
+			}
+			Stop();
+
+		}
+	}
+
+	public static void main(String[] args) {
+		new VnEplayer();
+	}
+}
