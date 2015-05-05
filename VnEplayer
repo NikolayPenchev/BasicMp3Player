@@ -4,13 +4,16 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.IOException;
+
 import java.util.ArrayList;
+
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -39,6 +42,7 @@ public class VnEplayer extends JFrame {
 	public static JLabel display;
 	public static JList<String> displayPlayList;
 	private JLabel changeTheme;
+
 	private int width = (Toolkit.getDefaultToolkit().getScreenSize().width / 2) - 144;
 	// private int height = (Toolkit.getDefaultToolkit().getScreenSize().height
 	// /2)-65;
@@ -55,9 +59,13 @@ public class VnEplayer extends JFrame {
 		setTitle("Mp3Player");
 		setLayout(new GridBagLayout());
 
-		background = new JLabel(
-				new ImageIcon(
-						"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\Recently Updated-008.jpg"));
+		// background = new JLabel(new ImageIcon(
+		// "C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\bin\\res\\Recently Updated-008.jpg"));
+		Image imageBg = new ImageIcon("resources\\Recently Updated-008.jpg")
+				.getImage();
+		
+		background = new JLabel(new ImageIcon(imageBg));
+
 		background.setLayout(new GroupLayout(background));
 		add(background);
 
@@ -77,9 +85,8 @@ public class VnEplayer extends JFrame {
 		designBy.setForeground(new Color(255, 153, 0));
 		designBy.setFont(new Font("Segoe Script", Font.BOLD, 15));
 		designBy.setBounds(100, 10, 100, 20);
-		changeTheme = new JLabel(
-				new ImageIcon(
-						"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\pencil.png"));
+		Image imagePencil = new ImageIcon("resources\\pencil.png").getImage();
+		changeTheme = new JLabel(new ImageIcon(imagePencil));
 		changeTheme.setBounds(3, 3, 31, 31);
 		exit = new JLabel("");
 		exit.setBounds(271, 13, 12, 12);
@@ -94,25 +101,24 @@ public class VnEplayer extends JFrame {
 		displayPlayList.setBackground(Color.BLACK);
 		displayPlayList.setFont(new Font("Century Gothic", Font.BOLD, 12));
 		displayPlayList.setBounds(3, 496, 282, 140);
-		loop = new JLabel(
-				new ImageIcon(
-						"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\knob_loop_off.png"));
+		Image imageLoopOff = new ImageIcon("resources\\knob_loop_off.png")
+				.getImage();
+		Image imageLoopOn = new ImageIcon("resources\\knob_loop_on.png").getImage();
+		loop = new JLabel(new ImageIcon(imageLoopOff));
 		loop.setBounds(17, 440, 32, 32);
 		loopCounter = new JLabel("Loop OFF");
 		loopCounter.setBounds(9, 460, 140, 40);
 		loopCounter.setForeground(new Color(255, 153, 0));
 		loopCounter.setFont(new Font("Verdana", Font.BOLD, 10));
-		stop = new JLabel(
-				new ImageIcon(
-						"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\stop.jpg"));
+		Image imageStop = new ImageIcon("resources\\stop.jpg").getImage();
+		stop = new JLabel(new ImageIcon(imageStop));
 		stop.setBounds(110, 440, 32, 32);
-		play = new JLabel(
-				new ImageIcon(
-						"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\play.jpg"));
+		Image imagePlay = new ImageIcon("resources\\play.jpg").getImage();
+		play = new JLabel(new ImageIcon(imagePlay));
 		play.setBounds(146, 440, 32, 32);
-		openSource = new JLabel(
-				new ImageIcon(
-						"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\eject.jpg"));
+		Image imageOpenSource = new ImageIcon("resources\\eject.jpg")
+				.getImage();
+		openSource = new JLabel(new ImageIcon(imageOpenSource));
 		openSource.setBounds(240, 440, 32, 32);
 
 		background.add(volumeLabel);
@@ -184,8 +190,7 @@ public class VnEplayer extends JFrame {
 				demo.Stop();
 				display.setText("");
 				demo.player = null;
-				play.setIcon(new ImageIcon(
-						"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\play.jpg"));
+				play.setIcon(new ImageIcon(imagePlay));
 				countPausePlay = 0;
 				count = 0;
 			}
@@ -203,26 +208,23 @@ public class VnEplayer extends JFrame {
 				// }
 			}
 		});
-
+		Image imagePause = new ImageIcon("\\..\\resources\\pause.jpg").getImage();
 		play.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				if (demo.player == null) {
 					demo.Open();
-					play.setIcon(new ImageIcon(
-							"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\pause.jpg"));
+					play.setIcon(new ImageIcon(imagePause));
 				} else {
 					switch (countPausePlay) {
 					case 0:
 						countPausePlay = 1;
-						play.setIcon(new ImageIcon(
-								"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\play.jpg"));
+						play.setIcon(new ImageIcon(imagePlay));
 						demo.Pause();
 						break;
 					case 1:
 						countPausePlay = 0;
-						play.setIcon(new ImageIcon(
-								"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\pause.jpg"));
+						play.setIcon(new ImageIcon(imagePause));
 						demo.Resume();
 						break;
 
@@ -240,13 +242,13 @@ public class VnEplayer extends JFrame {
 				case 0:
 					count = 1;
 					loop.setIcon(new ImageIcon(
-							"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\knob_loop_on.png"));
+							imageLoopOn));
 					loopCounter.setText("Loop ON");
 					break;
 				case 1:
 					count = 0;
 					loop.setIcon(new ImageIcon(
-							"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\knob_loop_off.png"));
+							imageLoopOff));
 					loopCounter.setText("Loop OFF");
 
 					break;
@@ -275,7 +277,18 @@ public class VnEplayer extends JFrame {
 				demo.Open();
 			}
 		});
-
+		Image imageBg1 = new ImageIcon("resources\\Recently Updated.jpg").getImage();
+		Image imageBg2 = new ImageIcon("resources\\Recently Updated-001.jpg").getImage();
+		Image imageBg3 = new ImageIcon("resources\\Recently Updated-002.jpg").getImage();
+		Image imageBg4 = new ImageIcon("resources\\Recently Updated-003.jpg").getImage();
+		Image imageBg5 = new ImageIcon("resources\\Recently Updated-004.jpg").getImage();
+		Image imageBg6 = new ImageIcon("resources\\Recently Updated-005.jpg").getImage();
+		Image imageBg7 = new ImageIcon("resources\\Recently Updated-006.jpg").getImage();
+		Image imageBg9 = new ImageIcon("resources\\Recently Updated-007.jpg").getImage();
+		Image imageBg10 = new ImageIcon("resources\\Recently Updated-009.jpg").getImage();
+		Image imageBg11 = new ImageIcon("resources\\Recently Updated-010.jpg").getImage();
+		Image imageBg8 = new ImageIcon("resources\\Recently Updated-011.jpg").getImage();
+		
 		changeTheme.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -284,73 +297,73 @@ public class VnEplayer extends JFrame {
 					theme = 1;
 					background
 							.setIcon(new ImageIcon(
-									"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\Recently Updated.jpg"));
+									imageBg1));
 					break;
 				case 1:
 					theme = 2;
 					background
 							.setIcon(new ImageIcon(
-									"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\Recently Updated-001.jpg"));
+									imageBg2));
 					break;
 				case 2:
 					theme = 3;
 					background
 							.setIcon(new ImageIcon(
-									"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\Recently Updated-002.jpg"));
+									imageBg3));
 					break;
 				case 3:
 					theme = 4;
 					background
 							.setIcon(new ImageIcon(
-									"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\Recently Updated-003.jpg"));
+									imageBg4));
 					break;
 				case 4:
 					theme = 5;
 					background
 							.setIcon(new ImageIcon(
-									"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\Recently Updated-004.jpg"));
+									imageBg5));
 					break;
 				case 5:
 					theme = 6;
 					background
 							.setIcon(new ImageIcon(
-									"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\Recently Updated-005.jpg"));
+									imageBg6));
 					break;
 				case 6:
 					theme = 7;
 					background
 							.setIcon(new ImageIcon(
-									"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\Recently Updated-006.jpg"));
+									imageBg7));
 					break;
 				case 7:
 					theme = 8;
 					background
 							.setIcon(new ImageIcon(
-									"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\Recently Updated-007.jpg"));
+									imageBg9));
 					break;
 				case 8:
 					theme = 9;
 					background
 							.setIcon(new ImageIcon(
-									"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\Recently Updated-009.jpg"));
+									imageBg10));
 					break;
 				case 9:
 					theme = 10;
 					background
 							.setIcon(new ImageIcon(
-									"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\Recently Updated-010.jpg"));
+									imageBg11));
 					break;
 				case 10:
 					theme = 11;
 					background
 							.setIcon(new ImageIcon(
-									"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\Recently Updated-011.jpg"));
+									imageBg8));
 					break;
 				case 11:
 					theme = 0;
 					background
 							.setIcon(new ImageIcon(
-									"C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\resources\\Recently Updated-008.jpg"));
+									imageBg));
 					break;
 				}
 			}
