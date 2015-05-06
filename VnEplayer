@@ -59,6 +59,8 @@ public class VnEplayer extends JFrame {
 		setTitle("Mp3Player");
 		setLayout(new GridBagLayout());
 
+		// background = new JLabel(new ImageIcon(
+		// "C:\\Users\\Penchevi's computer\\workspace\\Mp3PlayerDemo\\bin\\res\\Recently Updated-008.jpg"));
 		Image imageBg = new ImageIcon("resources\\Recently Updated-008.jpg")
 				.getImage();
 		
@@ -206,7 +208,7 @@ public class VnEplayer extends JFrame {
 				// }
 			}
 		});
-		Image imagePause = new ImageIcon("\\..\\resources\\pause.jpg").getImage();
+		Image imagePause = new ImageIcon("resources\\pause.jpg").getImage();
 		play.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -258,6 +260,7 @@ public class VnEplayer extends JFrame {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				System.exit(EXIT_ON_CLOSE);
+				demo.Stop();
 			}
 		});
 
